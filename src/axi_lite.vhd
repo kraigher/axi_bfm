@@ -92,17 +92,29 @@ package body axi_lite_pkg is
     signal bvalid : in std_logic;
     signal bready : out std_logic;
     signal bresp : in std_logic_vector) is
+
+    variable w_done, aw_done : boolean := false;
   begin
     awaddr <= address;
-    awvalid <= '1';
-    wait until (awvalid and awready) = '1' and rising_edge(aclk);
-    awvalid <= '0';
-
     wdata <= data;
     wstb <= (wstb'range => '1');
+
     wvalid <= '1';
-    wait until (wvalid and wready) = '1' and rising_edge(aclk);
-    wvalid <= '0';
+    awvalid <= '1';
+
+    while not (w_done and aw_done) loop
+      wait until ((awvalid and awready) = '1' or (wvalid and wready) = '1') and rising_edge(aclk);
+
+      if (awvalid and awready) = '1' then
+        awvalid <= '0';
+        aw_done := true;
+      end if;
+
+      if (wvalid and wready) = '1' then
+        wvalid <= '0';
+        w_done := true;
+      end if;
+    end loop;
 
     bready <= '1';
     wait until (bvalid and bready) = '1' and rising_edge(aclk);
