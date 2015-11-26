@@ -102,7 +102,6 @@ package body axi_memory_pkg is
             arlen'length = 8) report "arlen must be either 4 (AXI3) or 8 (AXI4)";
 
     -- Initialization
-    arready <= '1';
     rvalid <= '0';
     rid <= (rid'range => '0');
     rdata <= (rdata'range => '0');
@@ -111,6 +110,7 @@ package body axi_memory_pkg is
 
     loop
       -- Read AR channel
+      arready <= '1';
       wait until (arvalid and arready) = '1' and rising_edge(aclk);
       arready <= '0';
       address := to_integer(unsigned(araddr));
@@ -183,13 +183,13 @@ package body axi_memory_pkg is
             awlen'length = 8) report "awlen must be either 4 (AXI3) or 8 (AXI4)";
 
     -- Initialization
-    awready <= '1';
     wready <= '0';
     bvalid <= '0';
     bid <= (bid'range => '0');
     bresp <= (bresp'range => '0');
 
     loop
+      awready <= '1';
       wait until (awvalid and awready) = '1' and rising_edge(aclk);
       awready <= '0';
       address := to_integer(unsigned(awaddr));
