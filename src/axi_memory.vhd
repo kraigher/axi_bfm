@@ -47,7 +47,7 @@ package axi_memory_pkg is
     signal wready : out std_logic;
     signal wid : in std_logic_vector;
     signal wdata : in std_logic_vector;
-    signal wstb : in std_logic_vector;
+    signal wstrb : in std_logic_vector;
     signal wlast : in std_logic;
 
     signal bvalid : out std_logic;
@@ -163,7 +163,7 @@ package body axi_memory_pkg is
     signal wready : out std_logic;
     signal wid : in std_logic_vector;
     signal wdata : in std_logic_vector;
-    signal wstb : in std_logic_vector;
+    signal wstrb : in std_logic_vector;
     signal wlast : in std_logic;
 
     signal bvalid : out std_logic;
@@ -207,7 +207,7 @@ package body axi_memory_pkg is
         wready <= '0';
 
         for j in 0 to burst_size-1 loop
-          if wstb(j) = '1' then
+          if wstrb(j) = '1' then
             memory_model.write_byte(address+j, to_integer(unsigned(wdata(8*j+7 downto 8*j))));
           end if;
         end loop;
